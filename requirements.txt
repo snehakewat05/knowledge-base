@@ -1,0 +1,10 @@
+anthropic
+chromadb
+pymupdf
+beautifulsoup4
+requests
+youtube-transcript-api
+fastapi
+uvicorn
+python-dotenv
+sentence-transformers
