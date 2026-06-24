@@ -21,29 +21,30 @@ def get_or_create_collection(collection_name: str = "knowledge_base"):
 def store_chunks(embedded_chunks: list[dict], source_name: str):
     """
     Stores embedded chunks into ChromaDB.
-
-    Args:
-        embedded_chunks: List of chunk dicts with 'text', 'chunk_index', 'embedding'
-        source_name: Name of the source document e.g. 'my_notes.txt'
+    Handles optional page_number metadata for PDFs.
     """
     collection = get_or_create_collection()
 
-    # ChromaDB needs three things for each chunk:
-    ids         = []  # unique ID for each chunk
-    embeddings  = []  # the vector
-    documents   = []  # the raw text
-    metadatas   = []  # extra info we want to store alongside
+    ids        = []
+    embeddings = []
+    documents  = []
+    metadatas  = []
 
     for chunk in embedded_chunks:
         chunk_id = f"{source_name}_chunk_{chunk['chunk_index']}"
 
+        # Build metadata — include page_number only if present
+        metadata = {
+            "source": source_name,
+            "chunk_index": chunk['chunk_index']
+        }
+        if "page_number" in chunk:
+            metadata["page_number"] = chunk["page_number"]
+
         ids.append(chunk_id)
         embeddings.append(chunk['embedding'])
         documents.append(chunk['text'])
-        metadatas.append({
-            "source": source_name,
-            "chunk_index": chunk['chunk_index']
-        })
+        metadatas.append(metadata)
 
     collection.add(
         ids=ids,
@@ -52,4 +53,4 @@ def store_chunks(embedded_chunks: list[dict], source_name: str):
         metadatas=metadatas
     )
 
-    print(f"Stored {len(embedded_chunks)} chunks from '{source_name}' into ChromaDB")
+    print(f"Stored {len(embedded_chunks)} chunks from '{source_name}'")
