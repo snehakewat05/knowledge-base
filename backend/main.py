@@ -154,3 +154,56 @@ def reset():
     client = chromadb.PersistentClient(path=str(CHROMA_PATH))
     client.delete_collection("knowledge_base")
     return {"status": "Knowledge base cleared"}
+@app.get("/sources")
+def list_sources():
+    """Returns all unique sources currently stored in ChromaDB."""
+    collection = get_or_create_collection()
+
+    if collection.count() == 0:
+        return {"sources": []}
+
+    # Get all stored items
+    results = collection.get(include=["metadatas"])
+
+    # Extract unique sources with their metadata
+    seen = {}
+    for metadata in results["metadatas"]:
+        source = metadata["source"]
+        if source not in seen:
+            seen[source] = {
+                "name": source,
+                "chunk_count": 1
+            }
+        else:
+            seen[source]["chunk_count"] += 1
+
+    return {"sources": list(seen.values())}
+
+
+@app.delete("/sources/{source_name:path}")
+def delete_source(source_name: str):
+    """Deletes all chunks belonging to a specific source."""
+    collection = get_or_create_collection()
+
+    # Find all IDs belonging to this source
+    results = collection.get(include=["metadatas"])
+
+    ids_to_delete = [
+        results["ids"][i]
+        for i, metadata in enumerate(results["metadatas"])
+        if metadata["source"] == source_name
+    ]
+
+    if not ids_to_delete:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Source '{source_name}' not found"
+        )
+
+    collection.delete(ids=ids_to_delete)
+
+    return {
+        "status": "deleted",
+        "source": source_name,
+        "chunks_removed": len(ids_to_delete)
+    }
