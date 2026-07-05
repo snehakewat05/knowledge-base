@@ -146,7 +146,30 @@ def ingest_file(file: UploadFile = File(...)):
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+@app.get("/sources")
+def list_sources():
+    """Returns all unique sources with their tags."""
+    collection = get_or_create_collection()
 
+    if collection.count() == 0:
+        return {"sources": []}
+
+    results = collection.get(include=["metadatas"])
+
+    seen = {}
+    for metadata in results["metadatas"]:
+        source = metadata["source"]
+        if source not in seen:
+            tags = metadata.get("tags", "")
+            seen[source] = {
+                "name": source,
+                "chunk_count": 1,
+                "tags": tags.split(",") if tags else []
+            }
+        else:
+            seen[source]["chunk_count"] += 1
+
+    return {"sources": list(seen.values())}
 
 @app.delete("/reset")
 def reset():

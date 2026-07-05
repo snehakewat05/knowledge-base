@@ -9,3 +9,4 @@ uvicorn
 python-dotenv
 sentence-transformers
 python-multipart
+rapidfuzz

@@ -115,7 +115,7 @@ function Sidebar({ sources, onDelete, onRefresh }) {
                 {getSourceIcon(source.name)}
               </div>
 
-              {/* Source name + chunk count */}
+              {/* Source name + chunk count + tags */}
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{
                   fontSize: "12px",
@@ -135,6 +135,29 @@ function Sidebar({ sources, onDelete, onRefresh }) {
                 }}>
                   {source.chunk_count} chunks
                 </div>
+
+                {/* Tags */}
+                {source.tags && source.tags.length > 0 && (
+                  <div style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: "3px",
+                    marginTop: "4px"
+                  }}>
+                    {source.tags.slice(0, 3).map((tag, t) => (
+                      <span key={t} style={{
+                        fontSize: "9px",
+                        background: "#e0dbd3",
+                        color: "#4a6741",
+                        padding: "1px 5px",
+                        borderRadius: "4px",
+                        fontFamily: "system-ui, sans-serif"
+                      }}>
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* Remove button */}
