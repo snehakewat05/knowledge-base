@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "Knowledge Base Clipper",
+  "version": "1.0",
+  "description": "Clip any webpage into your personal knowledge base with one click",
+  "permissions": [
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "http://127.0.0.1:8000/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Clip to Knowledge Base"
+  }
+}

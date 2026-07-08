@@ -43,6 +43,14 @@ function App() {
   useEffect(() => {
     refreshStatus();
     refreshSources();
+
+    // Auto refresh every 10 seconds to pick up browser extension clips
+    const interval = setInterval(() => {
+      refreshStatus();
+      refreshSources();
+    }, 10000);
+
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {

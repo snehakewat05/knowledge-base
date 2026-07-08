@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 300px;
+      background: #f5f2ee;
+      font-family: system-ui, sans-serif;
+    }
+
+    .header {
+      background: #4a6741;
+      padding: 16px 18px;
+    }
+
+    .header h1 {
+      color: #fff;
+      font-size: 15px;
+      font-family: Georgia, serif;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    .header p {
+      color: #c5d4bf;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 2px;
+    }
+
+    .body {
+      padding: 16px 18px;
+    }
+
+    .url-preview {
+      background: #eee8e0;
+      border: 1px solid #d9d2c8;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 11px;
+      color: #6b6b6b;
+      word-break: break-all;
+      line-height: 1.5;
+      margin-bottom: 12px;
+      max-height: 60px;
+      overflow: hidden;
+    }
+
+    .clip-btn {
+      width: 100%;
+      padding: 11px;
+      background: #4a6741;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: Georgia, serif;
+      cursor: pointer;
+      letter-spacing: 0.3px;
+    }
+
+    .clip-btn:disabled {
+      background: #a8b89a;
+      cursor: not-allowed;
+    }
+
+    .status {
+      margin-top: 10px;
+      font-size: 12px;
+      text-align: center;
+      min-height: 18px;
+      color: #4a6741;
+    }
+
+    .status.error {
+      color: #b85c5c;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #d9d2c8;
+      margin: 14px 0;
+    }
+
+    .open-app-btn {
+      width: 100%;
+      padding: 9px;
+      background: transparent;
+      color: #4a6741;
+      border: 1px solid #d9d2c8;
+      border-radius: 8px;
+      font-size: 12px;
+      font-family: system-ui, sans-serif;
+      cursor: pointer;
+    }
+
+    .open-app-btn:hover {
+      background: #eee8e0;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Knowledge Base Clipper</h1>
+    <p>Save this page to your knowledge base</p>
+  </div>
+
+  <div class="body">
+    <div class="url-preview" id="urlPreview">
+      Loading current page...
+    </div>
+
+    <button class="clip-btn" id="clipBtn">
+      Add to Knowledge Base
+    </button>
+
+    <div class="status" id="status"></div>
+
+    <hr class="divider">
+
+    <button class="open-app-btn" id="openAppBtn">
+      Open Knowledge Base
+    </button>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
