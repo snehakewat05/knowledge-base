@@ -33,6 +33,7 @@ CHROMA_PATH = Path(__file__).parent.parent / "data" / "chroma"
 class ChatRequest(BaseModel):
     question: str
     top_k: int = 3
+    conversation_history: list[dict] = []
 
 
 class SourceCard(BaseModel):
@@ -71,8 +72,8 @@ def status():
 @app.post("/chat", response_model=ChatResponse)
 def chat(request: ChatRequest):
     """
-    Takes a question, retrieves relevant chunks,
-    and returns an answer with source cards.
+    Takes a question + conversation history,
+    retrieves relevant chunks, and returns a grounded answer.
     """
     collection = get_or_create_collection()
     if collection.count() == 0:
@@ -81,14 +82,16 @@ def chat(request: ChatRequest):
             detail="Knowledge base is empty. Ingest some content first."
         )
 
-    # Retrieve and answer
     retrieved = retrieve_chunks(request.question, top_k=request.top_k)
     if not retrieved:
         raise HTTPException(status_code=404, detail="No relevant chunks found.")
 
-    answer = get_answer(request.question, retrieved)
+    answer = get_answer(
+        request.question,
+        retrieved,
+        conversation_history=request.conversation_history
+    )
 
-    # Build source cards
     sources = [
         SourceCard(
             source=chunk["source"],

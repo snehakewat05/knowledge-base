@@ -54,13 +54,22 @@ function App() {
 
     const question = input.trim();
     setInput("");
-    setMessages(prev => [...prev, { role: "user", content: question }]);
+
+    const userMessage = { role: "user", content: question };
+    setMessages(prev => [...prev, userMessage]);
     setLoading(true);
+
+    // Build history to send — exclude the welcome message
+    const history = messages
+      .filter(m => m.role === "user" || m.role === "assistant")
+      .filter(m => !m.content.includes("Welcome to your personal"))
+      .map(m => ({ role: m.role, content: m.content }));
 
     try {
       const res = await axios.post("http://127.0.0.1:8000/chat", {
         question,
-        top_k: 3
+        top_k: 3,
+        conversation_history: history
       });
       setMessages(prev => [...prev, {
         role: "assistant",
